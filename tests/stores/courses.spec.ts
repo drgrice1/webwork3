@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-// The above is needed because  1) the logger uses the window object, which is only present
+// The above is needed because 1) the logger uses the window object, which is only present
 // when using the jsdom environment and 2) because the pinia store is used is being
 // tested with persistance.
 

@@ -25,6 +25,8 @@ use DB::Schema;
 use DB::Utils qw/updatePermissions/;
 use TestUtils qw/loadCSV/;
 
+use WeBWorK3::Authen::Password;
+
 my $verbose = 1;
 
 # Load the configuration for the database settings.
@@ -102,10 +104,10 @@ sub addUsers {
 	my $admin = {
 		username     => 'admin',
 		email        => 'admin@google.com',
-		first_name   => "Andrea",
-		last_name    => "Administrator",
+		first_name   => 'Andrea',
+		last_name    => 'Administrator',
 		is_admin     => true,
-		login_params => { password => "admin" }
+		login_params => { password => WeBWorK3::Authen::Password->new->generate('admin') }
 	};
 	$user_rs->create($admin);
 
@@ -116,7 +118,7 @@ sub addUsers {
 		for my $key (qw/username first_name last_name email student_id/) {
 			$stud_info->{$key} = $student->{$key};
 		}
-		$stud_info->{login_params} = { password => $student->{username} };
+		$stud_info->{login_params} = { password => WeBWorK3::Authen::Password->new->generate($student->{username}) };
 		$course->add_to_users($stud_info, { role_id => $student_role->role_id });
 
 		my $user   = $user_rs->find({ username => $student->{username} });

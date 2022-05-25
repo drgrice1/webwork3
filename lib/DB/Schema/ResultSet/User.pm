@@ -27,6 +27,8 @@ use Exception::Class qw/
 	DB::Exception::UserNotInCourse
 	/;
 
+use WeBWorK3::Authen::Password;
+
 =head1 getAllGlobalUsers
 
 This gets a list of all users or users stored in the database in the C<users> table.
@@ -229,12 +231,11 @@ sub getGlobalCourseUsers ($self, %args) {
 	return map { removeLoginParams({ $_->get_inflated_columns }); } @users;
 }
 
-# This clearly needs to be fixed to include encryption of the password.
-# We need to decide on what encryption algorithm.
-
+# Validate the provided username and password.
 sub authenticate ($self, $username, $password) {
 	my $user = $self->getGlobalUser(info => { username => $username }, as_result_set => 1);
-	return $user->login_params->{password} eq $password;
+	return 0 if !$user;
+	return WeBWorK3::Authen::Password->new->validate($user->login_params->{password}, $password);
 }
 
 #  The following is CRUD for users in a given course

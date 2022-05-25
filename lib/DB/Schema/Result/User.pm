@@ -53,7 +53,7 @@ C<method>: the method of the login/authentication
 
 =item *
 
-C<encrypt_password>: the encrypted password
+C<password>: the encrypted password
 
 =back
 
